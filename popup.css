@@ -1,0 +1,157 @@
+html::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+html::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+html::-webkit-scrollbar-thumb {
+    background: #ddd;
+    border-radius: 25px 0;
+}
+
+html::-webkit-scrollbar-thumb:hover {
+    background: #aaa;
+}
+
+html::-webkit-scrollbar-corner {
+    background: transparent;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f4f4f4;
+    color: #333;
+    min-width: 300px;
+    max-width: 500px;
+    word-wrap: break-word;
+}
+
+a {
+    display: block;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#search {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+    transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+}
+
+button {
+    cursor: pointer;
+    padding: 10px 16px;
+    font-size: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    margin-bottom: 15px;
+    transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+}
+
+button:hover {
+    background-color: #e6e6e6;
+    color: #333;
+}
+
+#notesContainer {
+    margin-top: 15px;
+}
+
+.note {
+    border: 1px solid #ccc;
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 4px;
+    transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+}
+
+.toggleBtn {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-top: 4px;
+}
+
+/* Light */
+@media (prefers-color-scheme: light) {
+    body {
+        background-color: #f4f4f4;
+        color: #333;
+    }
+
+    #search {
+        background-color: #fff;
+        border-color: #ccc;
+        color: #333;
+    }
+
+    button {
+        background-color: #fff;
+        border-color: #ccc;
+        color: #333;
+    }
+
+    .note {
+        background-color: #fff;
+        border-color: #ccc;
+        color: #333;
+    }
+
+    a {
+        color: #0077cc;
+        text-decoration: none;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+}
+
+/* Dark */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #1c1c1c;
+        color: #ddd;
+    }
+
+    #search {
+        background-color: #212121;
+        border: 1px solid #555;
+        color: #ddd;
+    }
+
+    button {
+        background-color: #212121;
+        border: 1px solid #555;
+        color: #ddd;
+    }
+
+    .note {
+        background-color: #2b2b2b;
+        border: 1px solid #555;
+        color: #ddd;
+    }
+
+    a {
+        color: #66aaff;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+}

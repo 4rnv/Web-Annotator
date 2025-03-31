@@ -1,0 +1,44 @@
+{
+    "manifest_version": 3,
+    "name": "Web Annotator",
+    "version": "1.1",
+    "permissions": ["storage", "contextMenus", "scripting", "activeTab", "tabs"],
+    "host_permissions": [
+        "http://*/*",
+        "https://*/*"
+    ],
+    "background": {
+      "service_worker": "background.js"
+    },
+    "content_scripts": [
+      {
+        "matches": [ "http://*/*",
+        "https://*/*"],
+        "js": ["content.js"]
+      }
+    ],
+    "icons": {
+      "16": "images/icons16.png",
+      "32": "images/icons32.png",
+      "48": "images/icons48.png",
+      "64": "images/icons64.png",
+      "128": "images/icons128.png"
+    },
+    "action": {
+      "default_popup": "popup.html",
+      "default_icon": {
+        "16": "images/icons16.png",
+        "32": "images/icons32.png",
+        "48": "images/icons48.png",
+        "64": "images/icons64.png",
+        "128": "images/icons128.png"
+      }
+    },
+    "web_accessible_resources": [
+      {
+        "resources": ["allnotes.html"],
+        "matches": [ "https://*/*" ]
+      }
+    ]
+  }
+  
