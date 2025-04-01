@@ -1,4 +1,3 @@
-// Group notes by URL for creating collections
 function groupNotesByUrl(notes) {
     return notes.reduce((groups, note) => {
         const url = note.url;
@@ -10,11 +9,9 @@ function groupNotesByUrl(notes) {
     }, {});
 }
 
-// Delete a note with the given timestamp
 function deleteNote(timestamp, callback) {
     chrome.storage.local.get({ notes: [] }, (result) => {
         let notes = result.notes || [];
-        // Optionally, use a unique ID instead of timestamp.
         notes = notes.filter(note => note.timestamp !== timestamp);
 
         chrome.storage.local.set({ notes: notes }, () => {
@@ -31,7 +28,6 @@ function deleteNote(timestamp, callback) {
     });
 }
 
-// Function to update an edited note
 function updateNote(updatedNote, callback) {
     chrome.storage.local.get({ notes: [] }, (result) => {
         let notes = result.notes || [];
@@ -52,18 +48,14 @@ function updateNote(updatedNote, callback) {
     });
 }
 
-// Render individual note element (used when viewing a collection’s individual notes)
 function renderNote(note, filter) {
     const noteElement = document.createElement("div");
     noteElement.classList.add("noteItem");
     noteElement.style.border = `3px solid ${note.color}`;
 
-    // Create container for note content
     const contentDiv = document.createElement("div");
     contentDiv.className = "noteContent";
 
-    // Elements for note title, annotated text, timestamp and URL.
-    // note.note is editable.
     const titleDiv = document.createElement("h2");
     titleDiv.textContent = note.note;
     titleDiv.className = "noteTitle";
@@ -77,17 +69,14 @@ function renderNote(note, filter) {
     const urlDiv = document.createElement("div");
     urlDiv.innerHTML = `<span>Source: <a href="${note.url}" target="_blank">${note.url}</a></span>`;
 
-    // Append elements to contentDiv
     contentDiv.appendChild(titleDiv);
     contentDiv.appendChild(annotatedTextDiv);
     contentDiv.appendChild(timestampDiv);
     contentDiv.appendChild(urlDiv);
 
-    // Container for action buttons
     const btnContainer = document.createElement("div");
     btnContainer.className = "noteActions";
 
-    // Delete button
     const deleteBtn = document.createElement("button");
     deleteBtn.classList.add("deletebtn");
     deleteBtn.innerHTML = `<i class="fa-solid fa-trash"></i>`;
@@ -99,7 +88,6 @@ function renderNote(note, filter) {
         }
     });
 
-    // Edit button with toggle for save
     const editBtn = document.createElement("button");
     editBtn.classList.add("editbtn");
     editBtn.innerHTML = `<i class="fa-solid fa-pen-to-square"></i>`;
@@ -108,17 +96,14 @@ function renderNote(note, filter) {
     editBtn.addEventListener("click", () => {
         if (!isEditing) {
             isEditing = true;
-            // Change icon to check for saving
             editBtn.innerHTML = `<i class="fa-solid fa-check"></i>`;
 
-            // Replace titleDiv with an input field
             const titleInput = document.createElement("input");
             titleInput.type = "text";
             titleInput.value = note.note;
             titleInput.className = "editTitleInput";
             contentDiv.replaceChild(titleInput, titleDiv);
 
-            // Add color picker below title input
             const colorContainer = document.createElement("div");
             colorContainer.style.marginTop = "5px";
             const colorLabel = document.createElement("label");
@@ -132,7 +117,6 @@ function renderNote(note, filter) {
             contentDiv.appendChild(colorContainer);
 
         } else {
-            // Save mode: capture updated title and color
             const titleInput = contentDiv.querySelector(".editTitleInput");
             if (!titleInput) return;
             const newTitle = titleInput.value;
@@ -161,13 +145,11 @@ function renderNote(note, filter) {
     return noteElement;
 }
 
-// Load all notes, grouped by site. The viewMode parameter decides if you want to view individual notes or collections.
 function loadAllNotes(filter = "", viewIndividual = false) {
     const notesContainer = document.getElementById("notesContainer");
     chrome.storage.local.get({ notes: [] }, (result) => {
         let notes = result.notes || [];
 
-        // Apply filtering if provided (case-insensitive).
         if (filter) {
             const lowerFilter = filter.toLowerCase();
             notes = notes.filter(note =>
@@ -182,11 +164,9 @@ function loadAllNotes(filter = "", viewIndividual = false) {
             return;
         }
 
-        // Group notes by URL
         const groups = groupNotesByUrl(notes);
         notesContainer.innerHTML = "";
 
-        // For each collection, show a summary box. Add a toggle to show/hide the individual notes.
         Object.entries(groups).forEach(([url, groupNotes]) => {
             const groupBox = document.createElement("div");
             groupBox.className = "groupBox";
@@ -209,15 +189,12 @@ function loadAllNotes(filter = "", viewIndividual = false) {
             title.appendChild(document.createTextNode(" "));
             title.appendChild(countSpan);
 
-            // Container for header right-side actions.
             const groupActions = document.createElement("div");
 
-            // Toggle button: if viewIndividual is true, hide the notes; otherwise show them.
             const toggleBtn = document.createElement("button");
             toggleBtn.classList.add('collectionBoxBtn');
             toggleBtn.textContent = viewIndividual ? "Hide Individual Notes" : "View Individual Notes";
             toggleBtn.addEventListener("click", () => {
-                // Toggle view for this group.
                 const notesDiv = groupBox.querySelector(".groupNotes");
                 if (notesDiv) {
                     if (notesDiv.style.display === "none") {
@@ -231,7 +208,6 @@ function loadAllNotes(filter = "", viewIndividual = false) {
             });
             groupActions.appendChild(toggleBtn);
 
-            // Export collection button
             const exportBtn = document.createElement("button");
             exportBtn.classList.add('collectionBoxBtn');
             exportBtn.textContent = "Export Collection";
@@ -246,10 +222,8 @@ function loadAllNotes(filter = "", viewIndividual = false) {
 
             groupBox.appendChild(header);
 
-            // Container for individual notes (if toggled visible)
             const groupNotesDiv = document.createElement("div");
             groupNotesDiv.className = "groupNotes";
-            // If viewIndividual=false, start with them hidden
             groupNotesDiv.style.display = viewIndividual ? "block" : "none";
 
             groupNotes.forEach(note => {
@@ -265,7 +239,6 @@ function loadAllNotes(filter = "", viewIndividual = false) {
     });
 }
 
-// Export all notes as JSON (for all notes)
 function exportAllNotes() {
     chrome.storage.local.get({ notes: [] }, (result) => {
         const notes = result.notes || [];
@@ -275,21 +248,17 @@ function exportAllNotes() {
         const timestamp = Date.now();
         const filename = `notes-export-${timestamp}.json`;
 
-        // Create a temporary anchor element to trigger the download
         const a = document.createElement("a");
         a.href = url;
         a.download = filename;
         document.body.appendChild(a);
         a.click();
-
-        // Cleanup
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
 
     });
 }
 
-// Export a specific collection of notes as JSON
 function exportCollection(notes) {
     const jsonString = JSON.stringify(notes, null, 2);
     const blob = new Blob([jsonString], { type: "application/json" });
@@ -306,8 +275,6 @@ function exportCollection(notes) {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
 }
-
-// Event listeners
 document.getElementById("search").addEventListener("input", (e) => {
     const filter = e.target.value;
     loadAllNotes(filter);
@@ -318,11 +285,7 @@ document.getElementById("exportNotes").addEventListener("click", () => {
 });
 
 document.getElementById("toggleView").addEventListener("click", (e) => {
-    // Get the toggle button element
     const toggleBtn = e.target;
-
-    // Determine the new mode based on the current text on the button
-    // (Button shows "View Individual Notes" when the current view is collections.)
     let viewIndividual;
     if (toggleBtn.textContent.trim() === "Expand All Notes") {
         viewIndividual = true;
@@ -331,13 +294,10 @@ document.getElementById("toggleView").addEventListener("click", (e) => {
         viewIndividual = false;
         toggleBtn.textContent = "Expand All Notes";
     }
-
-    // Load notes using the current filter and chosen view mode.
     const filter = document.getElementById("search").value;
     loadAllNotes(filter, viewIndividual);
 });
 
-// Load notes on DOM ready with default view (collections with notes hidden)
 document.addEventListener("DOMContentLoaded", () => {
     loadAllNotes("", false);
 });

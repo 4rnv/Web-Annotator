@@ -16,7 +16,6 @@ function getRelativeTime(timestamp) {
     }
 }
 
-// Function to toggle expanded state of a note element
 function toggleExpand(noteElement) {
     const detailsDiv = noteElement.querySelector(".note-details");
     const toggleButtonIcon = noteElement.querySelector(".toggleBtn i");
@@ -34,7 +33,6 @@ function toggleExpand(noteElement) {
     }
 }
 
-// Function to load and display notes with an optional filter
 function loadNotes(filter = "") {
     const lowerFilter = filter.toLowerCase();
     const notesContainer = document.getElementById("notesContainer");
@@ -44,7 +42,7 @@ function loadNotes(filter = "") {
             notesContainer.innerHTML = "Add a note.";
             return;
         }
-        // If filtering, search across all notes, otherwise sort descending and limit to 10 most recent.
+
         if (lowerFilter) {
             allNotes = allNotes.filter(note =>
                 note.text.toLowerCase().includes(lowerFilter) ||
@@ -52,25 +50,20 @@ function loadNotes(filter = "") {
                 note.url.toLowerCase().includes(lowerFilter)
             );
         } else {
-            //allNotes.sort((a, b) => b.timestamp - a.timestamp);
             allNotes.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
             allNotes = allNotes.slice(0, 10);
         }
-        // Clear the container
         notesContainer.innerHTML = "";
         allNotes.forEach(note => {
-            // Create a wrapper element for the note
             const noteElement = document.createElement("div");
             noteElement.className = "note";
             //noteElement.style.backgroundColor = note.color;
             noteElement.style.border = `2px solid ${note.color}`;
 
-            // Create the minimized content – note.note and relative time.
             const minimizedContent = `
             <div class="note-summary"><strong>Note:</strong> ${note.note}<br>
             <em>${getRelativeTime(note.timestamp)}</em></div>`;
 
-            // Create the details section (initially hidden)
             const detailsContent = `
             <div class="note-details" style="display: none; margin-top: 8px;">
             <div><strong>Text:</strong> ${note.text}</div>
@@ -79,21 +72,16 @@ function loadNotes(filter = "") {
             <strong>Source:</strong><a href="${note.url}" target="_blank">${note.url}</a>
             </div></div>`;
 
-            // Create the toggle button with an icon
             const toggleBtn = document.createElement("button");
             toggleBtn.className = "toggleBtn";
-            // Use an <i> element to hold the Font Awesome icon, starting with plus icon.
             toggleBtn.innerHTML = `<i class="fa-solid fa-plus"></i>`;
 
-            // Add a click event to toggle the note expand/collapse.
             toggleBtn.addEventListener("click", () => {
                 toggleExpand(noteElement);
             });
 
-            // Set inner HTML for the note element
             noteElement.innerHTML = minimizedContent + detailsContent;
             noteElement.appendChild(toggleBtn);
-
             notesContainer.appendChild(noteElement);
         });
     });
