@@ -1,4 +1,3 @@
-// Function to inject CSS for the tooltip, textarea, and buttons.
 function injectTooltipStyles() {
   // Check if styles already injected.
   if (document.getElementById("annotationStyles")) return;

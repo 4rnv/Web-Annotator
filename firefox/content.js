@@ -1,5 +1,3 @@
-// Function to inject CSS for the tooltip, textarea, and buttons. 
-// This injects a style block into the page so that our tooltip respects the user's color scheme.
 function injectTooltipStyles() {
   // Check if styles already injected.
   if (document.getElementById("annotationStyles")) return;
@@ -117,15 +115,10 @@ function injectTooltipStyles() {
   document.head.appendChild(style);
 }
 
-// Function to create a tooltip for note-taking with unique id handling
 function createTooltip(selection) {
-  // Ensure our styles are injected.
   injectTooltipStyles();
-  
-  // Capture the originally selected text immediately.
   const originalText = selection.toString();
   
-  // Fixes multiple tooltips being created
   const oldTooltip = document.getElementById("annotationTooltip");
   if (oldTooltip) {
     oldTooltip.remove();
@@ -144,7 +137,6 @@ function createTooltip(selection) {
     </div>`;
   document.body.appendChild(tooltip);
   
-  // Save note functionality: Simply save the note without highlighting the selection.
   tooltip.querySelector(".saveNote").onclick = () => {
     const noteText = tooltip.querySelector(".noteText").value;
     const color = tooltip.querySelector(".colorPicker").value;
@@ -165,13 +157,11 @@ function createTooltip(selection) {
     }
   };
   
-  // Cancel button functionality
   tooltip.querySelector(".cancelNote").onclick = () => {
     tooltip.remove();
   };
 }
 
-// Function to save note using chrome.storage.local
 function saveNoteToStorage(noteData, callback) {
   chrome.storage.local.get({ notes: [] }, (result) => {
     const notes = result.notes;
@@ -189,7 +179,6 @@ function saveNoteToStorage(noteData, callback) {
   });
 }
 
-// Listen for messages from the background page
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === "annotate") {
     const selection = window.getSelection();
@@ -202,9 +191,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
 });
 
-// The function for loading existing notes is now optional on the content page.
-// If you decide not to inject any saved annotations on the page, you may omit it.
-// For example purposes, here’s a function that logs the saved notes for the current URL.
 function notesForCurrentPage() {
   chrome.storage.local.get({ notes: [] }, (result) => {
     const notes = result.notes.filter(note => note.url === window.location.href);
@@ -213,5 +199,4 @@ function notesForCurrentPage() {
   });
 }
 
-// Optionally, log the notes when the page loads
 window.addEventListener("load", notesForCurrentPage);
